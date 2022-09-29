@@ -6,40 +6,104 @@
 
 {% block content %}
 
-<div class = "login">
+<nav class="navbar navbar-light" style="background-color: #272727;">
+    <b class="navbar-brand" style = "color:#FFFDED; margin-left: 10px; margin-right: 700px">Carissa Almira Yudiva</b>
+    <button><a href = "{% url 'wishlist:logout' %}">Logout</a></button>
+</nav>
 
-    <h1>Login</h1>
+<link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Pinyon Script' rel='stylesheet'>
+<style>
+    body {
+        font-family: "Poppins";
+        color:#201335;
+        font-size: 13px;
+        margin: 0;
+        background-image: url(https://cdn.discordapp.com/attachments/1024881450786492487/1024881554452926504/pic-1.gif);
+        align-items: center;
+        text-align: center;
+    }
+    input, textarea, select, button {
+        font-family: 'Poppins';
+        color: #4F4789;
+        font-size: 13px;
+        align-items: center;
+        text-align: center;
+    }
+    img { max-width: 100%; }
+    a {
+        color: #FFB17A;
+        font-size: small;
+        text-decoration-line: none;
+        font-family: 'Poppins';
+        align-items: center;
+        text-align: center;
+    }
+    h1 {
+        font-size: 60px;
+        font-family: 'Pinyon Script';
+        text-align: center;
+        margin-bottom: 28px;
+        color: #0eb632;
+    }
+    
+    button {
+        border-radius: 5px;
+        background-color: #1f1f1f;
+        border: #201335;
+        padding: 10px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-family: 'Poppins';
+        font-size: small;
+    }
+    b { 
+        margin-top: 10px;
+        font-size: large;
+        color: #201335;
+        margin-bottom: 10px;
+        font-family: 'Poppins';}
+</style>
 
-    <form method="POST" action="">
-        {% csrf_token %}
-        <table>
-            <tr>
-                <td>Username: </td>
-                <td><input type="text" name="username" placeholder="Username" class="form-control"></td>
-            </tr>
+
+<body>
+    <div ALIGN = 'center'> 
+        <div class = "login">
+            <div class = "bg">
+                <h1>𓆇 Login 𓆇</h1>
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <table>
+                        <tr>
+                            <td>Username: </td>
+                            <td><input type="text" name="username" placeholder="Username" class="form-control"></td>
+                        </tr>
+                                
+                        <tr>
+                            <td>Password: </td>
+                            <td><input type="password" name="password" placeholder="Password" class="form-control"></td>
+                        </tr>
+            
+                        <tr>
+                            <td></td>
+                            <td><input class="btn login_btn" type="submit" value="Login"></td>
+                        </tr>
+                    </table>
+                </form>
+            
+                {% if messages %}
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}     
                     
-            <tr>
-                <td>Password: </td>
-                <td><input type="password" name="password" placeholder="Password" class="form-control"></td>
-            </tr>
-
-            <tr>
-                <td></td>
-                <td><input class="btn login_btn" type="submit" value="Login"></td>
-            </tr>
-        </table>
-    </form>
-
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}     
-        
-    Belum mempunyai akun? <a href="{% url 'wishlist:register' %}">Buat Akun</a>
-
-</div>
+                Don't have an account? <a href="{% url 'wishlist:register' %}">Create one!</a>
+            </div>
+        </div>
+    </div>
+</body>
 
 {% endblock content %}

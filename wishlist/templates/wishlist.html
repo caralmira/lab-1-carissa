@@ -1,27 +1,136 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h5>Nama: </h5>
-<p>{{nama}}</p>
 
-<table>
-    <tr>
-    <th>Nama Barang</th>
-    <th>Harga Barang</th>
-    <th>Deskripsi</th>
-    </tr>
-    {% comment %} Tambahkan data di bawah baris ini {% endcomment %}
-    {% for barang in list_barang %}
-    <tr>
-        <th>{{barang.nama_barang}}</th>
-        <th>{{barang.harga_barang}}</th>
-        <th>{{barang.deskripsi}}</th>
-    </tr>
-    {% endfor %}
-</table>
+<link href='https://fonts.googleapis.com/css?family=Pinyon Script' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+<style>
+    body {
+        background: url(https://cdn.discordapp.com/attachments/1024881450786492487/1024881554452926504/pic-1.gif) repeat;
+        min-height: 100%;
+    }
+    .header {
+        padding: 20px;
+        text-align: center;
+    }
+    .primary-heading {
+        font-size: 60px;
+        font-family: 'Pinyon Script';
+        text-align: center;
+        margin-bottom: 28px;
+        color: #0eb632;
+        margin-bottom: 8px;
+        margin-top: 8px;
+    }
+    .body {
+        padding-top: 16px;
+        padding: 16px;
+    }
+    .footer {
+        margin-top: 32px;
+    }
+    .button {
+        border-radius: 5px;
+        background-color: #FFB17A;
+        border: #201335;
+        padding: 10px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-family: 'Poppins';
+        font-size: small;
+    }
+    a {
+    color: #FFB17A;
+    font-size: small;
+    text-decoration-line: none;
+    font-family: 'Poppins';
+    }
 
-<h5>Sesi terakhir login: {{ last_login }}</h5>
+    #list_barang {
+        margin-left: auto;
+        margin-right: auto;
+        align-content: center;
+        font-family: 'Poppins';
+        border-collapse: collapse;
+        width:100%;
+        outline-color: #201335;
+    }
 
-<button><a href="{% url 'wishlist:logout' %}">Logout</a></button>
+    #list_barang th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: center;
+        background-color: #272727;
+        color: #FFFDED;
+    }
+
+    #list_barang tr:nth-child(even)
+
+    #list_barang tr:hover {background-color: #FFF185;}
+
+    #list_barang td, #list_barang th {
+        border: none;
+        padding: 8px;
+        margin-top: 10px;
+        font-size: large;
+        color: #201335;
+        margin-bottom: 10px;
+        font-family: 'Poppins';
+    }
+
+    #list_barang th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        margin-top: 10px;
+        font-size: large;
+        color: #ffffff;
+        margin-bottom: 10px;
+        font-family: 'Poppins';
+    }
+
+    b { 
+    margin-top: 10px;
+    font-size: large;
+    color: #201335;
+    margin-bottom: 10px;
+    font-family: 'Poppins';
+    }
+</style>
+
+<nav class="navbar navbar-light" style="background-color: #272727;">
+    <b class="navbar-brand" style = "color:#FFFDED; margin-left: 10px; margin-right: 700px">Carissa Almira Yudiva</b>
+    <button><a href = "{% url 'wishlist:logout' %}">Logout</a></button>
+</nav>
+
+<body>
+    <div ALIGN = 'center'>
+        <div class="wrapper">
+            <div class = "header">
+                <h1 class = "primary-heading"> Nama: </h1>
+                <p class = "primary-heading">𓆇 {{nama}} 𓆇</p>
+            </div>
+            <div class="separator" style="color:#201335; margin:10x"></div>
+            <div class = "body">
+            <div class="separator" style="color:#201335; margin:10x"></div>
+            <table class="table" style="padding: 10px;" id="list_barang">
+                <tr>
+                    <th>Nama Barang</th>
+                    <th>Harga Barang</th>
+                    <th>Deskripsi</th>
+                    </tr>
+                    {% comment %} Tambahkan data di bawah baris ini {% endcomment %}
+                    {% for barang in list_barang %}
+                    <tr>
+                        <td>{{barang.nama_barang}}</td>
+                        <td>{{barang.harga_barang}}</td>
+                        <td>{{barang.deskripsi}}</td>
+                    </tr>
+                    {% endfor %}
+            </table>
+            <b>Sesi terakhir login: {{ last_login }}</b>
+        </div>
+    </div>
+</body>
 
 {% endblock content %}
