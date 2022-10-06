@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+<title> Wishlist </title>
+
+<script> src = "https://code.jquery.com/jquery-3.5.1.min.js"</script>
+<script>
+</script>
+
+<script type = "text/javascript">
+    function refresh() {
+        $.ajax({
+            type: "GET",
+            url: 'wishlist/json/',
+            dataType: "json",
+            success: function(data) {
+                newdata = data  
+            }
+        })
+        var newdata = refresh();
+        var itemHtml = "<table> <tr> <th>Nama Barang</th> <th>Harga Barang</th> <th>Deskripsi</th>"
+        for(var i = 0; i < newdata.length; i++) {
+            var item = newdata[i].fields;
+            itemHtml += '<tr> <th>' + item.nama_barang + '<tr> <th>' + item.harga_barang + '<tr> <th>' + item.deskripsi 
+        }
+        itemHtml += '</table>';
+        document.getElementById('pk').innerHTML = itemHtml;
+    }
+</script>
+
+{% endblock meta %}
+
+{% block content %}
+
+<link href='https://fonts.googleapis.com/css?family=Pinyon Script' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+<style>
+    body {
+        background: url(https://cdn.discordapp.com/attachments/1024881450786492487/1024881554452926504/pic-1.gif) repeat;
+        min-height: 100%;
+    }
+    .header {
+        padding: 20px;
+        text-align: center;
+    }
+    .primary-heading {
+        font-size: 60px;
+        font-family: 'Pinyon Script';
+        text-align: center;
+        margin-bottom: 28px;
+        color: #0eb632;
+        margin-bottom: 8px;
+        margin-top: 8px;
+    }
+    .body {
+        padding-top: 16px;
+        padding: 16px;
+    }
+    .footer {
+        margin-top: 32px;
+    }
+    .button {
+        border-radius: 5px;
+        background-color: #FFB17A;
+        border: #201335;
+        padding: 10px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-family: 'Poppins';
+        font-size: small;
+    }
+    a {
+    color: #FFB17A;
+    font-size: small;
+    text-decoration-line: none;
+    font-family: 'Poppins';
+    }
+
+    #list_barang {
+        margin-left: auto;
+        margin-right: auto;
+        align-content: center;
+        font-family: 'Poppins';
+        border-collapse: collapse;
+        width:100%;
+        outline-color: #201335;
+    }
+
+    #list_barang th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: center;
+        background-color: #272727;
+        color: #FFFDED;
+    }
+
+    #list_barang tr:nth-child(even)
+
+    #list_barang tr:hover {background-color: #FFF185;}
+
+    #list_barang td, #list_barang th {
+        border: none;
+        padding: 8px;
+        margin-top: 10px;
+        font-size: large;
+        color: #201335;
+        margin-bottom: 10px;
+        font-family: 'Poppins';
+    }
+
+    #list_barang th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        margin-top: 10px;
+        font-size: large;
+        color: #ffffff;
+        margin-bottom: 10px;
+        font-family: 'Poppins';
+    }
+
+    b { 
+    margin-top: 10px;
+    font-size: large;
+    color: #201335;
+    margin-bottom: 10px;
+    font-family: 'Poppins';
+    }
+</style>
+
+<body>
+    <nav class="navbar navbar-light" style="background-color: #272727;">
+        <b class="navbar-brand" style = "color:#FFFDED; margin-left: 10px; margin-right: 700px">Carissa Almira Yudiva</b>
+        <button><a href = "{% url 'wishlist:logout' %}">Logout</a></button>
+    </nav>
+
+    <div ALIGN = 'center'>
+        <h2 class="text-dark">Tambah Wishlist</h2>
+        <form method="POST" action="" id="form-barang">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>Nama barang: </td>
+                    <td><input type="text" name="nama_barang" placeholder="Nama barang" class="form-control"></td>
+                </tr>
+                        
+                <tr>
+                    <td>Harga barang: </td>
+                    <td><input type="number" name="harga_barang" placeholder="Harga barang" class="form-control"></td>
+                </tr>
+    
+                <tr>
+                    <td>Deskripsi: </td>
+                    <td><input type="text" name="deskripsi" placeholder="Deskripsi barang" class="form-control"></td>
+                </tr>
+    
+                <tr>
+                    <td></td>
+                    <td><input class="btn btn-primary" type="submit" value="Tambah"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+    <div ALIGN = 'center'>
+        <div class="wrapper">
+            <div class = "header">
+                <h1 class = "primary-heading"> Nama: </h1>
+                <p class = "primary-heading">𓆇 {{nama}} 𓆇</p>
+            </div>
+            <div class="separator" style="color:#201335; margin:10x"></div>
+            <div class = "body">
+            <div class="separator" style="color:#201335; margin:10x"></div>
+            <table class="table" style="padding: 10px;" id="list_barang">
+                <tr>
+                    <th>Nama Barang</th>
+                    <th>Harga Barang</th>
+                    <th>Deskripsi</th>
+                    </tr>
+                    {% comment %} Tambahkan data di bawah baris ini {% endcomment %}
+                    {% for barang in list_barang %}
+                    <tr>
+                        <td>{{barang.nama_barang}}</td>
+                        <td>{{barang.harga_barang}}</td>
+                        <td>{{barang.deskripsi}}</td>
+                    </tr>
+                    {% endfor %}
+            </table>
+            <b>Sesi terakhir login: {{ last_login }}</b>
+        </div>
+    </div>
+</body>
+
+{% endblock content %}

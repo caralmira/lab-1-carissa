@@ -5,13 +5,15 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.shortcuts import render
 from wishlist.models import BarangWishlist
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 import datetime
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from wishlist.utils import write
+import json
 
 # Create your views here.
 @login_required(login_url='/wishlist/login/')
@@ -23,6 +25,37 @@ def show_wishlist(request):
         'last_login': request.COOKIES['last_login']
     }
     return render(request, "wishlist.html", context)
+
+@login_required(login_url='/wishlist/login')
+def show_wishlist_ajax(request):
+    data_barang_wishlist = BarangWishlist.objects.all()
+    context = {
+        'list_barang': data_barang_wishlist,
+        'nama': 'Kisa Anjay',
+        'last_login': request.COOKIES['last_login']
+    }
+    return render(request, "wishlist_ajax.html", context)
+
+def json_to_database_async(request):
+    fetched_data = json.load(request)
+    nama_barang = fetched_data['nama_barang']
+    harga_barang = int(fetched_data['harga_barang'])
+    deskripsi = fetched_data['deskripsi']
+
+    new_data = BarangWishlist.objects.create(nama_barang=nama_barang, harga_barang=harga_barang, deskripsi=deskripsi)
+
+    data = {
+        "model": "wishlist.barangwishlist",
+        "pk": new_data.id,
+        "fields":{
+            "nama_barang": nama_barang,
+            "harga_barang": harga_barang,
+            "deskripsi": deskripsi
+        }
+    }
+
+    write(data)
+    return JsonResponse(data)
 
 def show_xml(request):
     data = BarangWishlist.objects.all()
