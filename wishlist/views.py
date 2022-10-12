@@ -26,37 +26,6 @@ def show_wishlist(request):
     }
     return render(request, "wishlist.html", context)
 
-@login_required(login_url='/wishlist/login')
-def show_wishlist_ajax(request):
-    data_barang_wishlist = BarangWishlist.objects.all()
-    context = {
-        'list_barang': data_barang_wishlist,
-        'nama': 'Kisa Anjay',
-        'last_login': request.COOKIES['last_login']
-    }
-    return render(request, "wishlist_ajax.html", context)
-
-def json_to_database_async(request):
-    fetched_data = json.load(request)
-    nama_barang = fetched_data['nama_barang']
-    harga_barang = int(fetched_data['harga_barang'])
-    deskripsi = fetched_data['deskripsi']
-
-    new_data = BarangWishlist.objects.create(nama_barang=nama_barang, harga_barang=harga_barang, deskripsi=deskripsi)
-
-    data = {
-        "model": "wishlist.barangwishlist",
-        "pk": new_data.id,
-        "fields":{
-            "nama_barang": nama_barang,
-            "harga_barang": harga_barang,
-            "deskripsi": deskripsi
-        }
-    }
-
-    write(data)
-    return JsonResponse(data)
-
 def show_xml(request):
     data = BarangWishlist.objects.all()
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
@@ -106,3 +75,26 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse('wishlist:login'))
     response.delete_cookie('last_login')
     return response
+
+@login_required(login_url='/wishlist/login')
+def show_wishlist_ajax(request):
+    data_barang_wishlist = BarangWishlist.objects.all()
+    context = {
+        'list_barang': data_barang_wishlist,
+        'nama': 'Kisa',
+        'last_login': request.COOKIES['last_login']
+    }
+    return render(request, "wishlist_ajax.html", context)
+
+@login_required(login_url='/wishlist/login/')
+def create_wishlist_ajax(request):
+    if (request.method == 'POST'):
+        nama_barang = request.POST.get('nama_barang')
+        harga_barang = request.POST.get('harga_barang')
+        deskripsi = request.POST.get('deskripsi')
+        BarangWishlist.objects.create(nama_barang=nama_barang, deskripsi=deskripsi, harga_barang=harga_barang)
+        return JsonResponse({
+            'error': False,
+            'msg': 'Success'
+        })
+    return redirect('wishlist:show_ajax_wishlist')

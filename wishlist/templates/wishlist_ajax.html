@@ -3,30 +3,7 @@
 {% block meta %}
 <title> Wishlist </title>
 
-<script> src = "https://code.jquery.com/jquery-3.5.1.min.js"</script>
-<script>
-</script>
 
-<script type = "text/javascript">
-    function refresh() {
-        $.ajax({
-            type: "GET",
-            url: 'wishlist/json/',
-            dataType: "json",
-            success: function(data) {
-                newdata = data  
-            }
-        })
-        var newdata = refresh();
-        var itemHtml = "<table> <tr> <th>Nama Barang</th> <th>Harga Barang</th> <th>Deskripsi</th>"
-        for(var i = 0; i < newdata.length; i++) {
-            var item = newdata[i].fields;
-            itemHtml += '<tr> <th>' + item.nama_barang + '<tr> <th>' + item.harga_barang + '<tr> <th>' + item.deskripsi 
-        }
-        itemHtml += '</table>';
-        document.getElementById('pk').innerHTML = itemHtml;
-    }
-</script>
 
 {% endblock meta %}
 
@@ -126,6 +103,14 @@
     margin-bottom: 10px;
     font-family: 'Poppins';
     }
+
+    input, textarea, select, button {
+        font-family: 'Poppins';
+        color: #3f3f3f;
+        font-size: 13px;
+        align-items: center;
+        text-align: center;
+    }
 </style>
 
 <body>
@@ -134,33 +119,6 @@
         <button><a href = "{% url 'wishlist:logout' %}">Logout</a></button>
     </nav>
 
-    <div ALIGN = 'center'>
-        <h2 class="text-dark">Tambah Wishlist</h2>
-        <form method="POST" action="" id="form-barang">
-            {% csrf_token %}
-            <table>
-                <tr>
-                    <td>Nama barang: </td>
-                    <td><input type="text" name="nama_barang" placeholder="Nama barang" class="form-control"></td>
-                </tr>
-                        
-                <tr>
-                    <td>Harga barang: </td>
-                    <td><input type="number" name="harga_barang" placeholder="Harga barang" class="form-control"></td>
-                </tr>
-    
-                <tr>
-                    <td>Deskripsi: </td>
-                    <td><input type="text" name="deskripsi" placeholder="Deskripsi barang" class="form-control"></td>
-                </tr>
-    
-                <tr>
-                    <td></td>
-                    <td><input class="btn btn-primary" type="submit" value="Tambah"></td>
-                </tr>
-            </table>
-        </form>
-    </div>
 
     <div ALIGN = 'center'>
         <div class="wrapper">
@@ -168,9 +126,6 @@
                 <h1 class = "primary-heading"> Nama: </h1>
                 <p class = "primary-heading">𓆇 {{nama}} 𓆇</p>
             </div>
-            <div class="separator" style="color:#201335; margin:10x"></div>
-            <div class = "body">
-            <div class="separator" style="color:#201335; margin:10x"></div>
             <table class="table" style="padding: 10px;" id="list_barang">
                 <tr>
                     <th>Nama Barang</th>
@@ -186,9 +141,63 @@
                     </tr>
                     {% endfor %}
             </table>
+
+            <form style = 'width: 70%;' action = 'POST'>
+                {% csrf_token %}
+                <div class = 'form-group'>
+                    <b>Item Name</b>
+                    <input class = 'form-control' id = 'nama_barang' placeholder= "Item Name">
+                </div>
+                <div class = 'form-group'>
+                    <b>Item Price</b>
+                    <input class = 'form-control' id = 'harga_barang' placeholder= "Item Price">
+                </div>
+                <div class = 'form-group'>
+                    <b>Item Description</b>
+                    <input class = 'form-control' id = 'deskripsi' placeholder= "Description">
+                </div>
+            </form>
+            <button class = 'btn btn-primary' id = 'add_wishlist'> Add Your Wishlist! </button>
             <b>Sesi terakhir login: {{ last_login }}</b>
         </div>
     </div>
 </body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $.ajax({
+            url: '/wishlist/json',
+            success: function (data) {
+                data.map((newData) => {
+                    $('#list_barang').append("<tr><td>" + newData.fields.nama_barang + "</td><td>" + newData.fields.harga_barang + "</td><td>" + newData.fields.deskripsi + "</td></tr>")
+                });
+            }
+        });
+    })
+
+    $('#add_wishlist').click(function(){
+        event.preventDefault(); //cancellable
+        const itemName = $("#nama_barang").val() //returns value
+        const itemPrice = $("#harga_barang").val() 
+        const description = $("#deskripsi").val()
+
+        $.ajax({
+            type: 'POST',
+            url: '/wishlist/ajax/',
+            data: {
+                nama_barang: itemName,
+                harga_barang: itemPrice,
+                deskripsi: description,
+            },
+            success: function (data) {
+                data.map((newData) => {
+                    $("#list_barang").append("<tr><td>" + newData.fields.nama_barang + "</td><td>" + newData.fields.harga_barang + "</td><td>" + newData.fields.deskripsi + "</td></tr>")
+                    fetchData()
+                });
+            }
+        });
+    })
+</script>
 
 {% endblock content %}
